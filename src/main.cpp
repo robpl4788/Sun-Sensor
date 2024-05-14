@@ -1,5 +1,8 @@
 #include <Arduino.h>
 
+ISR (TCA0_HUNF_vect) {
+  
+}
 
 void setup() {
 
@@ -18,6 +21,8 @@ void setup() {
   // TCA0_SPLIT_CTRLB = 0b00001010; //Connect timer to output pins
   TCA0_SPLIT_CTRLB |= 1 << 1; //Connect low channel 1 to output
   // TCA0_SPLIT_CTRLB |= 1 << 4; //Connect High channel 0 to output
+  PORTMUX_CTRLC |= 1 << 1; //Set Low Channel 1 outputting on alternative pin (B4)
+  // PORTMUX_CTRLC |= 1 << 3; //Set High Channel 0 outputting on alternative pin (C3)
 
   TCA0_SPLIT_CTRLD = (TCA_SPLIT_SPLITM_bm<<TCA_SPLIT_SPLITM_bp); //Enable Split
   
@@ -27,9 +32,7 @@ void setup() {
   TCA0_SPLIT_LCMP1 = 10; //Duty cycle 0.5
   TCA0_SPLIT_HCMP0 = 40; //Duty cycle 0.5
 
-  PORTMUX_CTRLC |= 1 << 1; //Set Low Channel 1 outputting on alternative pin (B4)
-  PORTMUX_CTRLC |= 1 << 3; //Set High Channel 0 outputting on alternative pin (C3)
-
+  TCA0_SPLIT_INTCTRL = 1 << 1; //High byte underflow interrupt enable
 
   TCA0_SPLIT_CTRLA = 1; //Enabled with no prescale
 
